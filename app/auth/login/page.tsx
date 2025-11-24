@@ -1,46 +1,79 @@
-'use client';
-import { useState } from 'react';
-import { login } from '@/lib/auth';
+"use client";
 
-export default function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+import { useState } from "react";
+import { login } from "@/lib/auth";
+import { useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+import { Mail, Lock } from "lucide-react";
 
-    const handleLogin = async () => {
-        await login(email, password);
-        window.location.href = '/dashboard';
-    };
+export default function LoginPage() {
+  const router = useRouter();
 
-    return (
-        <div className="max-w-md mx-auto p-6 bg-white shadow rounded-lg">
-            <h2 className="text-2xl font-bold mb-4">Login</h2>
-            <input
-                className="w-full border p-2 rounded mb-4"
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      await login(email, password);
+      router.push("/dashboard");
+    } catch (err) {
+      console.error(err);
+      alert("Login failed");
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="w-full max-w-md"
+      >
+        <Card className="shadow-xl rounded-2xl">
+          <CardHeader>
+            <CardTitle className="text-3xl font-semibold text-center">Welcome Back</CardTitle>
+            <p className="text-center text-gray-500 text-sm mt-1">Login to continue</p>
+          </CardHeader>
+
+          <CardContent className="space-y-4">
+            <div className="relative">
+              <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+              <Input
+                type="email"
                 placeholder="Email"
+                className="pl-10"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
-            />
-            <input
-                type="password"
-                className="w-full border p-2 rounded mb-4"
-                placeholder="Password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-            />
-            <button
-                className="w-full bg-blue-600 text-white p-2 rounded"
-                onClick={handleLogin}
-            >
-                Login
-            </button>
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
 
-            {/* Register Link */}
-            <p className="mt-4 text-center text-sm text-gray-600">
-                Don't have an account?{' '}
-                <a href="/auth/register" className="text-blue-600 hover:underline">
-                    Register
-                </a>
-            </p>
-        </div>
-    );
+            <div className="relative">
+              <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+              <Input
+                type="password"
+                placeholder="Password"
+                className="pl-10"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+
+            <Button className="w-full py-3 text-lg" onClick={handleLogin}>
+              Login
+            </Button>
+
+            <div className="text-center mt-2">
+              <a href="/auth/register" className="text-blue-600 hover:underline text-sm">
+                Don't have an account? Register
+              </a>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </div>
+  );
 }

@@ -7,20 +7,30 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken"); // Check if user is logged in
-    if (!token) {
-      router.push("/auth/login"); // Redirect to login if not
-    }
+    const token = localStorage.getItem("authToken");
+    if (!token) router.push("/auth/login");
   }, [router]);
 
-  return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
+  const cards = [
+    { title: 'Profile', path: '/profile' },
+    { title: 'Uploaded Skills', path: '/skills' },
+    { title: 'Requests', path: '/requests' },
+  ];
 
-      <div className="grid grid-cols-3 gap-6">
-        <div className="p-6 bg-white shadow rounded-lg">Profile</div>
-        <div className="p-6 bg-white shadow rounded-lg">Uploaded Skills</div>
-        <div className="p-6 bg-white shadow rounded-lg">Requests</div>
+  return (
+    <div className="max-w-6xl mx-auto py-10 px-4">
+      <h1 className="text-4xl font-bold mb-8 text-blue-700">Dashboard</h1>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {cards.map((card) => (
+          <div
+            key={card.title}
+            className="p-6 bg-white shadow-lg rounded-2xl cursor-pointer hover:shadow-xl transition-shadow text-center font-medium text-gray-700"
+            onClick={() => router.push(card.path)}
+          >
+            {card.title}
+          </div>
+        ))}
       </div>
     </div>
   );
