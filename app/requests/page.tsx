@@ -8,23 +8,45 @@ export default function RequestsPage() {
   const router = useRouter();
   const [requests, setRequests] = useState([]);
 
-  const loadRequests = () => {
-    api.get("/skill-requests").then((res) => setRequests(res.data));
+  const loadRequests = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      router.push("/auth/login");
+      return;
+    }
+
+    try {
+      const res = await api.get("/skill-requests", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setRequests(res.data);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to load requests");
+    }
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (!token) router.push("/auth/login");
     loadRequests();
   }, []);
 
   const accept = async (id: number) => {
-    await api.put(`/skill-requests/${id}/accept`);
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+
+    await api.put(`/skill-requests/${id}/accept`, null, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     loadRequests();
   };
 
   const reject = async (id: number) => {
-    await api.put(`/skill-requests/${id}/reject`);
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+
+    await api.put(`/skill-requests/${id}/reject`, null, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     loadRequests();
   };
 
@@ -36,7 +58,7 @@ export default function RequestsPage() {
         <div key={req.id} className="p-4 bg-white shadow mb-3 rounded">
           <p>
             <strong>{req.sender?.name}</strong> requested{" "}
-            <span className="text-blue-600">{req.skill?.title}</span>
+            <span className="text-blue-600">{req.skill?.skill_name}</span>
           </p>
 
           {req.status === "pending" ? (
