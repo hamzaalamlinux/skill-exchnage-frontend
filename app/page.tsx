@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import SkillCard from '@/components/SkillCard';
+import { redirect } from 'next/navigation';
 
 interface Skill {
   id: number;
@@ -12,6 +13,8 @@ interface Skill {
 }
 
 export default function Home() {
+    redirect("/home");
+
   const [skills, setSkills] = useState<Skill[]>([]);
 
   useEffect(() => {
