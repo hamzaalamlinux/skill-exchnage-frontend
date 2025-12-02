@@ -35,8 +35,8 @@ export default function SendSkillRequestPage() {
         },
       });
 
-      if (!res.ok) {
-        const err = await res.json();
+     if (res.status !== 200 && res.status !== 201) {
+        const err = await res.data;
         setError(err.message || "Something went wrong");
         setLoading(false);
         return;
