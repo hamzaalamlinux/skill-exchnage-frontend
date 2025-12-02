@@ -7,7 +7,7 @@ import api from "@/lib/api";
 
 interface Action {
   title: string;
-  icon: JSX.Element;
+  icon: React.ReactNode;
   link?: string;
   action?: () => void;
 }
