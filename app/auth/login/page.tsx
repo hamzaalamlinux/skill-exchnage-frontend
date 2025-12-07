@@ -29,9 +29,9 @@ export default function LoginPage() {
       //SET TOKEN
       localStorage.setItem("token", res.token);
       // ROLE BASED REDIRECT
-      if (res.role === 1) {
+      if (res.role == 1 || res.role == "1" ) {
         router.push("/admin/dashboard");
-      } else if (res.role === 2) {
+      } else if (res.role == 2 || res.role == "2") {
         router.push("/user/dashboard");
       } else {
         router.push("/home");
